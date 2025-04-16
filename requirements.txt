@@ -1,8 +1,15 @@
-streamlit>=1.32.0
+
+streamlit==1.32.0
 sentence-transformers==2.2.2
-transformers>=4.41.0
-accelerate>=0.27.2
-torch>=1.6.0
-numpy>=1.24
-scikit-learn>=1.4
-tqdm>=4.65
+numpy>=1.26.0  # Updated for Python 3.13 compatibility
+pandas==2.2.0
+scikit-learn==1.4.0
+plotly==5.18.0
+matplotlib==3.8.2
+seaborn==0.13.2
+transformers==4.38.2
+torch==2.2.1
+tqdm==4.66.1
+spacy==3.7.4
+setuptools>=68.0.0  # Needed for Python 3.13 compatibility
+faiss-cpu

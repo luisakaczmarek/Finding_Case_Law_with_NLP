@@ -19,6 +19,7 @@ Together, these models create a powerful tool that helps users discover relevant
 ---
 
 ## 🗂️ Repository Structure
+```bash
 .
 ├── app.py                       # Main Streamlit application
 ├── case_embeddings_to_pickle.ipynb  # Script to create and save embeddings
@@ -29,7 +30,7 @@ Together, these models create a powerful tool that helps users discover relevant
 ├── requirements.txt            # Python dependencies
 └── data/                       # Directory containing case texts and embeddings
     └── extracted_texts/        # Text files extracted from PDFs
-
+```
 ---
 
 ## 🛠️ Installation Instructions

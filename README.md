@@ -30,8 +30,7 @@ Together, these models create a powerful tool that helps users discover relevant
 ├── case_embeddings.pkl                      
 ├── case_embeddings_to_pickle.ipynb  # Script to create and save embeddings
 ├── requirements.txt            # Python dependencies
-└── data/                       # Directory containing case texts and embeddings
-    └── extracted_texts/        # Text files extracted from PDFs
+└── extracted_texts.zip
 ```
 ---
 

@@ -21,12 +21,14 @@ Together, these models create a powerful tool that helps users discover relevant
 ## 🗂️ Repository Structure
 ```bash
 .
-├── app.py                       # Main Streamlit application
-├── case_embeddings_to_pickle.ipynb  # Script to create and save embeddings
 ├── notebooks/
 │   ├── 0_web_scraping_cases.ipynb   # Web scraping legal cases
 │   ├── 1_convert_cases_pdf_to_txt.ipynb  # Converting PDFs to text
 │   └── 2_main.ipynb                 # Core implementation and analysis
+├── README.md 
+├── app.py # Main Streamlit application
+├── case_embeddings.pkl                      
+├── case_embeddings_to_pickle.ipynb  # Script to create and save embeddings
 ├── requirements.txt            # Python dependencies
 └── data/                       # Directory containing case texts and embeddings
     └── extracted_texts/        # Text files extracted from PDFs

@@ -9,7 +9,7 @@ import plotly.express as px
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import concurrent.futures
-import ollama  # Ensure you have the Ollama API available
+#import ollama  # Ensure you have the Ollama API available
 
 # Set page config
 st.set_page_config(
@@ -79,78 +79,25 @@ def find_most_similar_cases(query_text, embedding_model, case_embeddings, case_n
 def safe_summarize_first_part_by_tokens(case_text, summarizer, max_tokens=1024):
     """
     Summarizes the first part of a legal case by truncating its tokenized input to
-    at most max_tokens tokens. This accounts for special tokens so that the final 
-    token count does not exceed max_tokens.
-    
-    Parameters:
-      case_text (str): Full text of the legal case.
-      summarizer: A Hugging Face summarization pipeline with an associated tokenizer.
-      max_tokens (int): Maximum allowed tokens, including special tokens (default: 1024).
-      
-    Returns:
-      (str): The summary, or an error message if summarization fails.
+    at most max_tokens tokens.
     """
-    # Obtain the tokenizer from the summarizer's pipeline.
     tokenizer = summarizer.tokenizer
-    
-    # Encode the full text with special tokens.
     tokens = tokenizer.encode(case_text, add_special_tokens=True)
     original_token_count = len(tokens)
-    
-    # Determine how many special tokens are added by the tokenizer.
     special_tokens_count = tokenizer.num_special_tokens_to_add(pair=False)
     
-    # If the total number of tokens is too high, truncate so that total tokens ≤ max_tokens.
     if original_token_count > max_tokens:
         allowed_tokens = max_tokens - special_tokens_count
         tokens = tokens[:allowed_tokens]
         truncated_text = tokenizer.decode(tokens, skip_special_tokens=True)
     else:
         truncated_text = case_text
-    
-    # Re-encode truncated text to verify the final token count.
-    final_token_count = len(tokenizer.encode(truncated_text, add_special_tokens=True))
-    print(f"Final token count for summarization: {final_token_count}")
+
+    print(f"Final token count for summarization: {len(tokenizer.encode(truncated_text, add_special_tokens=True))}")
     
     try:
-        summary_output = summarizer(truncated_text, max_length=130, min_length=30, do_sample=False)
-        if isinstance(summary_output, list) and summary_output:
-            summary_text = summary_output[0].get("summary_text", "").strip()
-            if summary_text:
-                return summary_text
-        return "[No summary generated.]"
-    except Exception as e:
-        return f"⚠️ Failed to summarize case: {str(e)}"
-
-    """
-    Summarizes the first part of a legal case by first truncating its input to a maximum token length.
-    
-    Parameters:
-      case_text (str): Full text of the legal case.
-      summarizer: A Hugging Face summarization pipeline (with an associated tokenizer).
-      max_tokens (int): Maximum number of tokens allowed (e.g., 1024).
-      
-    Returns:
-      (str): The summary, or an error message if summarization fails.
-    """
-    # Get the tokenizer from the summarizer's pipeline
-    tokenizer = summarizer.tokenizer
-    # Encode the text without truncation first, to check token length.
-    tokens = tokenizer.encode(case_text, add_special_tokens=True)
-    original_token_count = len(tokens)
-    if original_token_count > max_tokens:
-        print(f"Truncating input: original token count {original_token_count} exceeds max_tokens {max_tokens}.")
-        # Truncate tokens to allowed max.
-        tokens = tokens[:max_tokens]
-        # Decode back to text (skipping special tokens for clarity)
-        truncated_text = tokenizer.decode(tokens, skip_special_tokens=True)
-    else:
-        truncated_text = case_text
-
-    print(f"Final token count for summarization: {len(tokenizer.encode(truncated_text))}")
-    
-    try:
-        summary_output = summarizer(truncated_text, max_length=130, min_length=30, do_sample=False)
+        # Increase max_length and min_length for a fuller summary.
+        summary_output = summarizer(truncated_text, max_length=1000, min_length=50, do_sample=False)
         if isinstance(summary_output, list) and summary_output:
             summary_text = summary_output[0].get("summary_text", "").strip()
             if summary_text:
@@ -317,7 +264,7 @@ def main():
                 case_num = future_to_case[future]
                 try:
                     result = future.result()
-                    print(f"Debug: Summary for case {case_num}: {result[:100]}")
+                    print(f"Debug: Summary for case {case_num}: {result}")
                     summaries[case_num] = result
                 except Exception as exc:
                     summaries[case_num] = f"⚠️ Failed to summarize: {exc}"
@@ -332,10 +279,12 @@ def main():
                 url = get_case_url(case_num)
                 st.markdown(f"[View full case on Justia]({url})")
                 st.subheader("Summary")
-                st.write(summaries.get(case_num, "No summary available."))
+                # Use st.text_area so users can scroll through the full summary if it's long.
+                st.write(summaries.get(case_num, "No summary available.")) # this should make the height adjust automatically 
                 st.subheader("Excerpt")
                 excerpt = nonempty_documents[case_num][:500] + "..." if len(nonempty_documents[case_num]) > 500 else nonempty_documents[case_num]
                 st.text(excerpt)
+
         
         # # Generate response for the top-most similar case
         # st.subheader("Generated Response for Top Case")

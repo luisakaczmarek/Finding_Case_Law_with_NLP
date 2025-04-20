@@ -22,15 +22,22 @@ Together, these models create a powerful tool that helps users discover relevant
 ```bash
 .
 ├── notebooks/
-│   ├── 0_web_scraping_cases.ipynb   # Web scraping legal cases
+│   ├── 0_web_scraping_cases.ipynb        # Web scraping legal cases
 │   ├── 1_convert_cases_pdf_to_txt.ipynb  # Converting PDFs to text
-│   └── 2_main.ipynb                 # Core implementation and analysis
+│   ├── 2_main.ipynb                      # Core implementation and analysis, technically does the same thing as app.py but without the interface.
+│   ├── 3_case_embeddings_to_pickle.ipynb # Script to create and save embeddings
+│   └── 4_testing.ipynb                   # run sample queries and save them into a simple format to enable lawyers to assess the performance
+├── data/
+│   ├── case_embeddings.pkl
+│   ├── extracted_texts.zip
+│   └── test_results/
+│       ├── test_questions_cases_with_summaries.xlsx    
+│       ├── test_results_case_summaries.pkl
+│       ├── test_results_similar_cases.pkl
+│       └── test_results_similar_cases.xlsx              # simple sheet  to enable lawyers to assess the performance
 ├── README.md 
-├── app.py # Main Streamlit application
-├── case_embeddings.pkl                      
-├── case_embeddings_to_pickle.ipynb  # Script to create and save embeddings
-├── requirements.txt            # Python dependencies
-└── extracted_texts.zip
+├── app.py                                 # Main Streamlit application          
+└── requirements.txt                       # Python dependencies
 ```
 ---
 
